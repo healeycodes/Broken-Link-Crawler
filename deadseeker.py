@@ -23,9 +23,11 @@ class LinkParser(HTMLParser):
         while self.pages_to_check:
             page = self.pages_to_check.pop()
             req = Request(page, headers={'User-Agent': agent})
-            with request.urlopen(req) as f:
-                body = f.read().decode('utf-8', errors='ignore')
-                self.feed(body)
+            res = request.urlopen(req)
+            if 'html' in res.headers['content-type']:
+                with res as f:
+                    body = f.read().decode('utf-8', errors='ignore')
+                    self.feed(body)
 
     def handle_starttag(self, tag, attrs):
         for attr in attrs:
