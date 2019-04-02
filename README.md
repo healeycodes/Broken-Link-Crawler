@@ -10,6 +10,6 @@ $ python deadseeker.py 'https://healeycodes.github.io/'
 
 It's that simple. The website is crawled, and all `href` and `src` attributes are sent a request. Errors are reported. This bot doesn't observe `robots.txt` but _you should_.
 
-This was for my **[tutorial](https://healeycodes.github.io/python/beginners/tutorial/webdev/2019/04/02/dead-link-bot.html)** on building a dead resource finder so it's scope has been kept quite small.
+This was for my **[tutorial](https://healeycodes.github.io/python/beginners/tutorial/webdev/2019/04/02/dead-link-bot.html)** on building a dead link checker so it's scope has been kept quite small.
 
 ### It is not a clever bot. But it is a good bot.
