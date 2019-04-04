@@ -2,6 +2,8 @@ This was for my **[tutorial](https://healeycodes.github.io/python/beginners/tuto
 
 # Broken Link Crawler
 
+![Desktop](https://github.com/healeycodes/Broken-Link-Crawler/blob/master/bot-in-action.gif)
+
 Let's say I have a website and I want to find any dead links and images on this website.
 
 ```bash
