@@ -47,7 +47,7 @@ class LinkParser(HTMLParser):
         except urllib.error.URLError as e:
             print(f'URLError: {e.reason} - {link}')  # (e.g. conn. refused)
         except ValueError as e:
-            print(f'ValueError {e} - {link}')  # (e.g. missing protocol http)
+            print(f'ValueError {e} - {link}')  # (e.g. missing protocol)
         # else:
             # print(f'{status} - {link}')
         if self.home in link:
