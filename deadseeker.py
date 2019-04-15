@@ -1,3 +1,8 @@
+'''
+deadseeker.py
+Seeking out your 404s in around 50 lines of vanilla Python.
+'''
+
 import sys
 import urllib
 from urllib import request, parse
@@ -11,15 +16,18 @@ agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, li
 
 
 class LinkParser(HTMLParser):
-    def __init__(self, home):
+    '''Create an instance of this parser to being scanning'''
+    def __init__(self, home, verbose):
         super().__init__()
         self.home = home
+        self.verbose = verbose
         self.checked_links = set()
         self.pages_to_check = deque()
         self.pages_to_check.appendleft(home)
         self.scanner()
 
     def scanner(self):
+        '''Loop through remaining pages, looking for HTML responses'''
         while self.pages_to_check:
             page = self.pages_to_check.pop()
             req = Request(page, headers={'User-Agent': agent})
@@ -30,6 +38,7 @@ class LinkParser(HTMLParser):
                     self.feed(body)
 
     def handle_starttag(self, tag, attrs):
+        '''Override parent method and check tag for our attributes'''
         for attr in attrs:
             # ('href', 'http://google.com')
             if attr[0] in search_attrs and attr[1] not in self.checked_links:
@@ -37,10 +46,11 @@ class LinkParser(HTMLParser):
                 self.handle_link(attr[1])
 
     def handle_link(self, link):
+        '''Send a HEAD request to the link, catch any pesky errors'''
         if not bool(urlparse(link).netloc):  # relative link?
             link = urljoin(self.home, link)
         try:
-            req = Request(link, headers={'User-Agent': agent})
+            req = Request(link, headers={'User-Agent': agent}, method='HEAD')
             status = request.urlopen(req).getcode()
         except urllib.error.HTTPError as e:
             print(f'HTTPError: {e.code} - {link}')  # (e.g. 404, 501, etc)
@@ -48,10 +58,11 @@ class LinkParser(HTMLParser):
             print(f'URLError: {e.reason} - {link}')  # (e.g. conn. refused)
         except ValueError as e:
             print(f'ValueError {e} - {link}')  # (e.g. missing protocol http)
-        # else:
-            # print(f'{status} - {link}')
+        else:
+            if self.verbose:
+                print(f'{status} - {link}')
         if self.home in link:
             self.pages_to_check.appendleft(link)
 
-
-LinkParser(sys.argv[1])  # 'https://healeycodes.github.io/'
+# 'https://healeycodes.github.io/ v' :homepage(URL): :verbose('v'):
+LinkParser(sys.argv[1], sys.argv[2] == 'v')
