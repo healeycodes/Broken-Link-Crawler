@@ -16,8 +16,9 @@ agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, li
 
 
 class LinkParser(HTMLParser):
-    '''Create an instance of this parser to being scanning'''
     def __init__(self, home, verbose):
+        ''':home:    a homepage, e.g. 'https://healeycodes.github.io/'
+           :verbose: the character 'v' for verbose mode'''
         super().__init__()
         self.home = home
         self.verbose = verbose
@@ -64,5 +65,5 @@ class LinkParser(HTMLParser):
         if self.home in link:
             self.pages_to_check.appendleft(link)
 
-# 'https://healeycodes.github.io/ v' :homepage(URL): :verbose('v'):
+# 'https://healeycodes.github.io/ v'
 LinkParser(sys.argv[1], sys.argv[2] == 'v')
