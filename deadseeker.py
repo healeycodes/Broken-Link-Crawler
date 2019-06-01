@@ -65,5 +65,6 @@ class LinkParser(HTMLParser):
         if self.home in link:
             self.pages_to_check.appendleft(link)
 
-# 'https://healeycodes.github.io/ v'
-LinkParser(sys.argv[1], sys.argv[2] == 'v')
+# 'https://healeycodes.github.io/ v' check for verbose tag
+verbose = len(sys.argv) > 2 and sys.argv[2] == 'v'
+LinkParser(sys.argv[1], verbose)
