@@ -1,4 +1,4 @@
-This was for my **[tutorial](https://healeycodes.github.io/python/beginners/tutorial/webdev/2019/04/02/dead-link-bot.html)** on building a dead link checker so it's scope has been kept quite small.
+This was for my **[tutorial](https://healeycodes.github.io/python/beginners/tutorial/webdev/2019/04/02/dead-link-bot.html)** on building a dead link checker so its scope has been kept quite small.
 
 # Broken Link Crawler
 
