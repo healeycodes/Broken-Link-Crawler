@@ -17,7 +17,7 @@ agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, li
 
 class LinkParser(HTMLParser):
     def __init__(self, home, verbose):
-        ''':home:    a homepage, e.g. 'https://healeycodes.github.io/'
+        ''':home:    a homepage, e.g. 'https://healeycodes.com/'
            :verbose: boolean for for verbose mode'''
         super().__init__()
         self.home = home
@@ -68,5 +68,5 @@ class LinkParser(HTMLParser):
 
 # check for verbose tag
 verbose = len(sys.argv) > 2 and sys.argv[2] == 'v'
-# enable this as a script, e.g., 'https://healeycodes.github.io/ v'
+# enable this as a script, e.g., 'https://healeycodes.com/ v'
 LinkParser(sys.argv[1], verbose)
