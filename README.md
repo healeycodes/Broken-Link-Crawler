@@ -7,7 +7,7 @@ This was for my **[tutorial](https://healeycodes.com/python/beginners/tutorial/w
 Let's say I have a website and I want to find any dead links and images on this website.
 
 ```bash
-$ python deadseeker.py 'https://healeycodes.github.io/'
+$ python deadseeker.py 'https://healeycodes.com/'
 > 404 - https://docs.python.org/3/library/missing.html
 > 404 - https://github.com/microsoft/solitare2
 ```
