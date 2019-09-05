@@ -10,6 +10,7 @@ from urllib.parse import urlparse, urljoin
 from urllib.request import Request
 from html.parser import HTMLParser
 from collections import deque
+from http.client import InvalidURL
 
 search_attrs = set(['href', 'src'])
 agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'
@@ -65,7 +66,8 @@ class LinkParser(HTMLParser):
             print(
                 f'ValueError {e} - {link} - {self.page}'
             )  # (e.g. missing protocol http)
-            print(f'ValueError {e} - {link}')  # (e.g. missing protocol http)
+        except InvalidURL as e:
+            print(f'InvalidURL {e} - {link} - {self.page}')
         else:
             if self.verbose:
                 print(f'{status} - {link} - {self.page}')
