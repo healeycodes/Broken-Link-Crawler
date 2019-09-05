@@ -24,6 +24,7 @@ class LinkParser(HTMLParser):
         self.verbose = verbose
         self.checked_links = set()
         self.pages_to_check = deque()
+        self.page = home
         self.pages_to_check.appendleft(home)
         self.scanner()
 
@@ -36,6 +37,7 @@ class LinkParser(HTMLParser):
             if 'html' in res.headers['content-type']:
                 with res as f:
                     body = f.read().decode('utf-8', errors='ignore')
+                    self.page = page
                     self.feed(body)
 
     def handle_starttag(self, tag, attrs):
@@ -54,14 +56,19 @@ class LinkParser(HTMLParser):
             req = Request(link, headers={'User-Agent': agent}, method='HEAD')
             status = request.urlopen(req).getcode()
         except urllib.error.HTTPError as e:
-            print(f'HTTPError: {e.code} - {link}')  # (e.g. 404, 501, etc)
+            print(f'HTTPError: {e.code} - {link} - {self.page}')  # (e.g. 404, 501, etc)
         except urllib.error.URLError as e:
-            print(f'URLError: {e.reason} - {link}')  # (e.g. conn. refused)
+            print(
+                f'URLError: {e.reason} - {link} - {self.page}'
+            )  # (e.g. conn. refused)
         except ValueError as e:
+            print(
+                f'ValueError {e} - {link} - {self.page}'
+            )  # (e.g. missing protocol http)
             print(f'ValueError {e} - {link}')  # (e.g. missing protocol http)
         else:
             if self.verbose:
-                print(f'{status} - {link}')
+                print(f'{status} - {link} - {self.page}')
         if self.home in link:
             self.pages_to_check.appendleft(link)
 
