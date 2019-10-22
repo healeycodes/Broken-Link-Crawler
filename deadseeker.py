@@ -12,6 +12,7 @@ from html.parser import HTMLParser
 from collections import deque
 
 search_attrs = set(['href', 'src'])
+excluded_link_prefixes = set(['mailto:'])
 agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'
 
 
@@ -42,7 +43,7 @@ class LinkParser(HTMLParser):
         '''Override parent method and check tag for our attributes'''
         for attr in attrs:
             # ('href', 'http://google.com')
-            if attr[0] in search_attrs and attr[1] not in self.checked_links:
+            if attr[0] in search_attrs and attr[1] not in self.checked_links and not attr[1].startswith(tuple(excluded_link_prefixes)):
                 self.checked_links.add(attr[1])
                 self.handle_link(attr[1])
 
