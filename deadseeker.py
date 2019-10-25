@@ -5,6 +5,7 @@ Seeking out your 404s in around 50 lines of vanilla Python.
 
 import sys
 import urllib
+import time
 from urllib import request, parse
 from urllib.parse import urlparse, urljoin
 from urllib.request import Request
@@ -53,7 +54,9 @@ class LinkParser(HTMLParser):
             link = urljoin(self.home, link)
         try:
             req = Request(link, headers={'User-Agent': agent}, method='HEAD')
+            start = time.time() # measure load time (HEAD only)
             status = request.urlopen(req).getcode()
+            end = time.time()
         except urllib.error.HTTPError as e:
             print(f'HTTPError: {e.code} - {link}')  # (e.g. 404, 501, etc)
         except urllib.error.URLError as e:
@@ -62,7 +65,8 @@ class LinkParser(HTMLParser):
             print(f'ValueError {e} - {link}')  # (e.g. missing protocol http)
         else:
             if self.verbose:
-                print(f'{status} - {link}')
+                elapsedTime = "{0:.2f} ms".format((end - start)*1000)
+                print(f'{status} - {link} - {elapsedTime}')
         if self.home in link:
             self.pages_to_check.appendleft(link)
 
