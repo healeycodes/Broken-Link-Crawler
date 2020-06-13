@@ -12,7 +12,7 @@ $ python deadseeker.py 'https://healeycodes.com/'
 > 404 - https://github.com/microsoft/solitare2
 ```
 
-It's that simple. The website is crawled, and all `href` and `src` attributes are sent a request. Errors are reported. This bot doesn't observe `robots.txt` but _you should_.
+The website is crawled, and all `href` and `src` attributes are sent a request. Errors are reported. This bot doesn't observe `robots.txt` but _you should_.
 
 
 
