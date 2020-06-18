@@ -5,6 +5,7 @@ Seeking out your 404s in around 50 lines of vanilla Python.
 
 import sys
 import urllib
+import validators
 from urllib import request, parse
 from urllib.parse import urlparse, urljoin
 from urllib.request import Request
@@ -47,24 +48,29 @@ class LinkParser(HTMLParser):
                 self.handle_link(attr[1])
 
     def handle_link(self, link):
+        #print ('analizzo link ->'+link)
         '''Send a HEAD request to the link, catch any pesky errors'''
-        if not bool(urlparse(link).netloc):  # relative link?
-            link = urljoin(self.home, link)
-        try:
-            req = Request(link, headers={'User-Agent': agent}, method='HEAD')
-            status = request.urlopen(req).getcode()
-        except urllib.error.HTTPError as e:
-            print(f'HTTPError: {e.code} - {link}')  # (e.g. 404, 501, etc)
-        except urllib.error.URLError as e:
-            print(f'URLError: {e.reason} - {link}')  # (e.g. conn. refused)
-        except ValueError as e:
-            print(f'ValueError {e} - {link}')  # (e.g. missing protocol http)
+        if ":" not in link: 
+            link = self.home+link       
+        if validators.url(link):
+            if not bool(urlparse(link).netloc):  # relative link?
+                link = urljoin(self.home, link)
+            try:
+                req = Request(link, headers={'User-Agent': agent}, method='HEAD')
+                status = request.urlopen(req).getcode()
+            except urllib.error.HTTPError as e:
+                print(f'HTTPError: {e.code} - {link}')  # (e.g. 404, 501, etc)
+            except urllib.error.URLError as e:
+                print(f'URLError: {e.reason} - {link}')  # (e.g. conn. refused)
+            except ValueError as e:
+                print(f'ValueError {e} - {link}')  # (e.g. missing protocol http)
+            else:
+                if self.verbose:
+                    print(f'{status} - {link}')
+            if self.home in link:
+                self.pages_to_check.appendleft(link)
         else:
-            if self.verbose:
-                print(f'{status} - {link}')
-        if self.home in link:
-            self.pages_to_check.appendleft(link)
-
+            print ('Check: '+link)
 
 # check for verbose tag
 verbose = len(sys.argv) > 2 and sys.argv[2] == 'v'
