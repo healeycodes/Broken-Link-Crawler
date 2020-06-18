@@ -5,6 +5,7 @@ Seeking out your 404s in around 50 lines of vanilla Python.
 
 import sys
 import urllib
+import time
 from urllib import request, parse
 from urllib.parse import urlparse, urljoin
 from urllib.request import Request
@@ -12,6 +13,7 @@ from html.parser import HTMLParser
 from collections import deque
 
 search_attrs = set(['href', 'src'])
+excluded_link_prefixes = set(['mailto:'])
 agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'
 
 
@@ -42,7 +44,7 @@ class LinkParser(HTMLParser):
         '''Override parent method and check tag for our attributes'''
         for attr in attrs:
             # ('href', 'http://google.com')
-            if attr[0] in search_attrs and attr[1] not in self.checked_links:
+            if attr[0] in search_attrs and attr[1] not in self.checked_links and not attr[1].startswith(tuple(excluded_link_prefixes)):
                 self.checked_links.add(attr[1])
                 self.handle_link(attr[1])
 
@@ -52,7 +54,9 @@ class LinkParser(HTMLParser):
             link = urljoin(self.home, link)
         try:
             req = Request(link, headers={'User-Agent': agent}, method='HEAD')
+            start = time.time() # measure load time (HEAD only)
             status = request.urlopen(req).getcode()
+            end = time.time()
         except urllib.error.HTTPError as e:
             print(f'HTTPError: {e.code} - {link}')  # (e.g. 404, 501, etc)
         except urllib.error.URLError as e:
@@ -61,7 +65,8 @@ class LinkParser(HTMLParser):
             print(f'ValueError {e} - {link}')  # (e.g. missing protocol http)
         else:
             if self.verbose:
-                print(f'{status} - {link}')
+                elapsedTime = "{0:.2f} ms".format((end - start)*1000)
+                print(f'{status} - {link} - {elapsedTime}')
         if self.home in link:
             self.pages_to_check.appendleft(link)
 
