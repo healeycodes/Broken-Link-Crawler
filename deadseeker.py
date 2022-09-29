@@ -1,4 +1,4 @@
-'''
+''
 deadseeker.py
 Seeking out your 404s in around 50 lines of vanilla Python.
 '''
@@ -45,7 +45,6 @@ class LinkParser(HTMLParser):
             if attr[0] in search_attrs and attr[1] not in self.checked_links:
                 self.checked_links.add(attr[1])
                 self.handle_link(attr[1])
-
     def handle_link(self, link):
         '''Send a HEAD request to the link, catch any pesky errors'''
         if not bool(urlparse(link).netloc):  # relative link?
@@ -70,3 +69,4 @@ class LinkParser(HTMLParser):
 verbose = len(sys.argv) > 2 and sys.argv[2] == 'v'
 # enable this as a script, e.g., 'https://healeycodes.com/ v'
 LinkParser(sys.argv[1], verbose)
+
